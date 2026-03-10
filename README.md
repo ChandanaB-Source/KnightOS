@@ -199,3 +199,18 @@ Server → Client:
 **Frontend:** React 18 · TypeScript · Vite · Zustand · Framer Motion · chess.js · Socket.io-client · React Router v6 · React Hot Toast
 
 **DevOps:** Docker · Docker Compose · Nginx · GitHub Actions CI/CD
+
+---
+
+## 👨‍💻 Author
+
+**Chandana B**
+- GitHub: [@ChandanaB-Source](https://github.com/ChandanaB-Source)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+MIT License — free to use, modify and distribute with attribution.
