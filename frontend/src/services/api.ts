@@ -1,54 +1,61 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: import.meta.env.VITE_API_URL, // DO NOT add /api here
   timeout: 12000,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Inject stored JWT
-api.interceptors.request.use((cfg) => {
+// Attach JWT token automatically
+api.interceptors.request.use((config) => {
   try {
     const s = localStorage.getItem("ko-auth");
     if (s) {
-      const t = JSON.parse(s)?.state?.token;
-      if (t) cfg.headers.Authorization = `Bearer ${t}`;
+      const token = JSON.parse(s)?.state?.token;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
-  } catch (_) {}
-  return cfg;
+  } catch (err) {}
+
+  return config;
 });
 
-// Auto refresh token on 401
+// Auto refresh token when 401 happens
 api.interceptors.response.use(
   (response) => response,
-  async (err) => {
-    if (err.response?.status === 401) {
+  async (error) => {
+    if (error.response?.status === 401) {
       try {
         const s = localStorage.getItem("ko-auth");
 
-        if (!s) return Promise.reject(err);
+        if (!s) return Promise.reject(error);
 
         const parsed = JSON.parse(s);
-        const rt = parsed?.state?.refreshToken;
+        const refreshToken = parsed?.state?.refreshToken;
 
-        if (rt) {
-          const { data } = await api.post("/auth/refresh", {
-            refreshToken: rt,
+        if (refreshToken) {
+          const res = await api.post("/auth/refresh", {
+            refreshToken,
           });
 
-          const newToken = data.data.token;
+          const newToken = res.data.data.token;
 
           parsed.state.token = newToken;
           localStorage.setItem("ko-auth", JSON.stringify(parsed));
 
-          err.config.headers.Authorization = `Bearer ${newToken}`;
+          error.config.headers.Authorization = `Bearer ${newToken}`;
 
-          return api(err.config);
+          return api(error.config);
         }
-      } catch (_) {}
+      } catch (e) {
+        console.error("Token refresh failed");
+      }
     }
 
-    return Promise.reject(err);
+    return Promise.reject(error);
   }
 );
 
