@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { register, login, refreshToken, getMe, logout, registerValidators, loginValidators } from '../controllers/authController';
+import { googleAuth } from '../controllers/googleAuthController';
 import { getGame, getUserGames, createAiGame } from '../controllers/gameController';
 import { getUserProfile, updateProfile, searchUsers, getOnlineCount, getLeaderboard } from '../controllers/userController';
 import { sendRequest, respondRequest, getFriends, getIncoming, removeFriend, searchUsers as searchFriendUsers } from '../controllers/friendController';
@@ -11,6 +12,7 @@ authRouter.post('/login', loginValidators, login);
 authRouter.post('/refresh', refreshToken);
 authRouter.get('/me', authenticate, getMe);
 authRouter.post('/logout', authenticate, logout);
+authRouter.post('/google', googleAuth);
 
 export const gameRouter = Router();
 gameRouter.get('/user/:userId', optionalAuth, getUserGames);

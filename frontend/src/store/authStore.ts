@@ -15,6 +15,7 @@ interface AuthStore {
   isAuthenticated: boolean; isLoading: boolean; error: string | null;
   login(email: string, pwd: string): Promise<void>;
   register(username: string, email: string, pwd: string, country?: string): Promise<void>;
+  googleLogin(accessToken: string, userInfo: any): Promise<void>;
   logout(): Promise<void>;
   refreshUser(): Promise<void>;
   updateUser(u: Partial<AppUser>): void;
@@ -57,6 +58,19 @@ export const useAuth = create<AuthStore>()(
           toast.success(`Welcome to KnightOS, ${username}! 🎉`);
         } catch (e: any) {
           const msg = e.response?.data?.error || e.response?.data?.errors?.[0]?.msg || 'Registration failed';
+          set({ error: msg, isLoading: false }); toast.error(msg); throw e;
+        }
+      },
+
+      googleLogin: async (accessToken: string, userInfo: any) => {
+        set({ isLoading: true, error: null });
+        try {
+          const { data } = await api.post('/auth/google', { credential: accessToken, userInfo });
+          const { token, refreshToken, user } = data.data;
+          set({ token, refreshToken, user, isAuthenticated: true, isLoading: false });
+          toast.success(`Welcome, ${user.username}! ♟`);
+        } catch (e: any) {
+          const msg = e.response?.data?.error || 'Google login failed';
           set({ error: msg, isLoading: false }); toast.error(msg); throw e;
         }
       },

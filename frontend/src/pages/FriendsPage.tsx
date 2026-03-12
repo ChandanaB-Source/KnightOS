@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Avatar from '../components/Avatar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../store/authStore';
@@ -311,8 +312,8 @@ export default function FriendsPage() {
                       <motion.div key={f.id} className={`card ${s.friendCard}`}
                         initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                         <div className={s.fcTop}>
-                          <div className={s.fcAvatar} style={{ background: `${TIER_COLOR[f.rankTier]}22`, border: `2px solid ${TIER_COLOR[f.rankTier]}55` }}>
-                            {f.avatar}
+                          <div className={s.fcAvatar} style={{ background: f.avatar?.startsWith('http') ? 'transparent' : `${TIER_COLOR[f.rankTier]}22`, border: `2px solid ${TIER_COLOR[f.rankTier]}55` }}>
+                            <Avatar avatar={f.avatar} username={f.username} size={44} />
                             <div className={`${s.onlineDot} ${f.isOnline ? s.online : s.offline}`} />
                           </div>
                           <div className={s.fcInfo}>
@@ -363,7 +364,7 @@ export default function FriendsPage() {
                   {requests.map((req, i) => (
                     <motion.div key={req.id} className={`card ${s.requestCard}`}
                       initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}>
-                      <div className={s.reqAvatar} style={{ color: TIER_COLOR[req.from.rankTier] }}>{req.from.avatar}</div>
+                      <Avatar avatar={req.from.avatar} username={req.from.username} size={44} className={s.reqAvatar} />
                       <div className={s.reqInfo}>
                         <div className={s.reqName}>{req.from.username}</div>
                         <div className={s.reqRating} style={{ color: TIER_COLOR[req.from.rankTier] }}>
@@ -401,7 +402,7 @@ export default function FriendsPage() {
                   return (
                     <motion.div key={uid} className={`card ${s.searchCard}`}
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-                      <div className={s.scAvatar} style={{ color: TIER_COLOR[u.rankTier] || 'var(--gold)' }}>{u.avatar || '♟'}</div>
+                      <Avatar avatar={u.avatar || '♟'} username={u.username} size={44} className={s.scAvatar} />
                       <div className={s.scInfo}>
                         <div className={s.scName}>{u.username}</div>
                         <div className={s.scRating} style={{ color: TIER_COLOR[u.rankTier] || 'var(--muted)' }}>

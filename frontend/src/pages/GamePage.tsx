@@ -1,4 +1,5 @@
 import { Chess } from 'chess.js';
+import Avatar from '../components/Avatar';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -581,8 +582,8 @@ export default function GamePage() {
           {/* Me / White player (bottom) */}
           <div className={s.playerBar}>
             <div className={s.playerInfo}>
-              <span className={s.playerAv} style={{ background: isSpectator ? 'var(--card2)' : 'linear-gradient(135deg,var(--gold),var(--gold2))' }}>
-                {isSpectator ? '♙' : user?.avatar}
+              <span className={s.playerAv} style={{ background: isSpectator ? 'var(--card2)' : (user?.avatar?.startsWith('http') ? 'transparent' : 'linear-gradient(135deg,var(--gold),var(--gold2))') }}>
+                {isSpectator ? '♙' : <Avatar avatar={user?.avatar || '♟'} username={user?.username || ''} size={24} />}
               </span>
               <div>
                 <div className={s.playerName}>

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../store/authStore';
+import api from '../services/api';
 import s from './AuthPage.module.css';
 
 const FLAGS = ['🌍','🇮🇳','🇺🇸','🇬🇧','🇩🇪','🇫🇷','🇯🇵','🇰🇷','🇧🇷','🇷🇺','🇨🇳','🇦🇺','🇨🇦'];
@@ -11,7 +12,8 @@ export default function AuthPage() {
   const [mode, setMode] = useState<'login'|'register'>(params.get('mode') === 'login' ? 'login' : 'register');
   const [form, setForm] = useState({ username: '', email: '', password: '', country: '🌍' });
   const [showPwd, setShowPwd] = useState(false);
-  const { login, register, isLoading, error, clearError, isAuthenticated, loadDemo } = useAuth();
+  const [gLoading, setGLoading] = useState(false);
+  const { login, register, googleLogin, isLoading, error, clearError, isAuthenticated, loadDemo } = useAuth();
   const nav = useNavigate();
 
   useEffect(() => { if (isAuthenticated) nav('/app/play', { replace: true }); }, [isAuthenticated]);
@@ -24,6 +26,41 @@ export default function AuthPage() {
       else await register(form.username, form.email, form.password, form.country);
     } catch(_) {}
   };
+
+  const handleGoogleLogin = useCallback(() => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const redirectUri = window.location.origin;
+    const scope = 'email profile';
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=select_account`;
+    
+    const width = 500, height = 600;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    const popup = window.open(url, 'google-login', `width=${width},height=${height},left=${left},top=${top}`);
+
+    setGLoading(true);
+
+    const timer = setInterval(async () => {
+      try {
+        if (!popup || popup.closed) { clearInterval(timer); setGLoading(false); return; }
+        const popupUrl = popup.location.href;
+        if (popupUrl.includes('access_token')) {
+          clearInterval(timer);
+          popup.close();
+          const hash = new URL(popupUrl).hash.substring(1);
+          const params = new URLSearchParams(hash);
+          const accessToken = params.get('access_token');
+          if (accessToken) {
+            const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+              headers: { Authorization: `Bearer ${accessToken}` }
+            }).then(r => r.json());
+            await googleLogin(accessToken, userInfo);
+          }
+          setGLoading(false);
+        }
+      } catch(_) {}
+    }, 500);
+  }, [googleLogin]);
 
   return (
     <div className={s.page}>
@@ -38,7 +75,6 @@ export default function AuthPage() {
         <div className={s.logo}>♟ Knight<span>OS</span></div>
         <div className={s.tagline}>Climb the ranks. Beat the AI. Dominate the board.</div>
 
-        {/* Tabs */}
         <div className={s.tabs}>
           <button className={`${s.tab}${mode==='register'?' '+s.active:''}`} onClick={()=>{setMode('register');clearError();}}>Create Account</button>
           <button className={`${s.tab}${mode==='login'  ?' '+s.active:''}`} onClick={()=>{setMode('login');clearError();}}>Sign In</button>
@@ -50,6 +86,23 @@ export default function AuthPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: .18 }}>
+
+            {/* Custom Google Button */}
+            <button className={s.googleBtn} onClick={handleGoogleLogin} disabled={gLoading || isLoading}>
+              {gLoading ? <span className="spinner" /> : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                  </svg>
+                  {mode === 'login' ? 'Sign in with Google' : 'Sign up with Google'}
+                </>
+              )}
+            </button>
+
+            <div className={s.or}><span>or continue with email</span></div>
 
             {mode === 'register' && (
               <div className={s.field}>
