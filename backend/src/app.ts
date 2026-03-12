@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { rateLimit } from 'express-rate-limit';
 import { authRouter, gameRouter, userRouter, leaderboardRouter, friendRouter } from './routes/index';
+import { googleAuth } from './controllers/googleAuthController';
 import { errorHandler, notFound } from './middleware/errorHandler';
 
 const app = express();
@@ -31,6 +32,7 @@ if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
 app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 300, standardHeaders: true, legacyHeaders: false }));
 app.use('/api/auth', rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: { error: 'Too many attempts' } }));
 app.get('/health', (_, res) => res.json({ status: 'ok', time: new Date().toISOString(), env: process.env.NODE_ENV }));
+app.post('/api/auth/google', googleAuth);
 app.use('/api/auth', authRouter);
 app.use('/api/games', gameRouter);
 app.use('/api/users', userRouter);
