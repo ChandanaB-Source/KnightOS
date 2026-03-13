@@ -56,3 +56,49 @@
   box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(245,200,66,.2);
 }
 .tcRow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; padding: 10px 14px; background: var(--surface); border-radius: 10px; border: 1px solid var(--border); }
+
+/* ── Challenge Notification Modal ─────────────────────── */
+.challengeOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; backdrop-filter: blur(6px);
+}
+.challengeModal {
+  background: var(--card); border: 2px solid var(--gold);
+  border-radius: 20px; padding: 36px 40px; max-width: 420px; width: 90%;
+  text-align: center; box-shadow: 0 0 60px rgba(245,200,66,.25);
+}
+.challengeAvatar {
+  font-size: 3.5rem; margin-bottom: 12px;
+}
+.challengeFrom {
+  font-family: var(--font-d); font-size: 1.4rem; color: var(--gold);
+  letter-spacing: 2px; margin-bottom: 4px;
+}
+.challengeRating {
+  color: var(--muted); font-size: .85rem; margin-bottom: 16px;
+}
+.challengeTC {
+  display: inline-block; background: rgba(245,200,66,.1);
+  border: 1px solid var(--gold); border-radius: 8px;
+  padding: 6px 18px; color: var(--gold); font-size: 1rem;
+  font-weight: 700; margin-bottom: 28px;
+}
+.challengeActions {
+  display: flex; gap: 12px; justify-content: center;
+}
+.challengeTimer {
+  font-size: .75rem; color: var(--muted); margin-top: 16px;
+}
+
+@media(max-width: 600px) {
+  .page { padding: 16px 12px; }
+  .title { font-size: 1.8rem; }
+  .friendGrid { grid-template-columns: 1fr; }
+  .fcActions { flex-wrap: wrap; }
+  .requestCard { flex-wrap: wrap; }
+  .reqActions { width: 100%; justify-content: flex-end; }
+  .challengeModal { padding: 24px 20px; }
+  .challengeActions { flex-direction: column; }
+  .tabs { flex-wrap: wrap; }
+}

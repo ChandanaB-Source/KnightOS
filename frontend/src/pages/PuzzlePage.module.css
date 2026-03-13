@@ -53,7 +53,7 @@
 }
 
 /* Left col */
-.leftCol { width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
+.leftCol { width: clamp(160px, 18vw, 220px); flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
 
 .infoCard { padding: 18px; }
 .infoTop  { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
@@ -82,10 +82,10 @@
 
 .rankLabel { width: 18px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-m); font-size: .55rem; color: var(--muted); background: var(--surface); }
 .fileLabels { display: flex; }
-.fileLabel  { width: 70px; text-align: center; font-family: var(--font-m); font-size: .55rem; color: var(--muted); padding: 3px 0; background: var(--surface); }
+.fileLabel  { width: clamp(44px, 6vw, 70px); text-align: center; font-family: var(--font-m); font-size: .55rem; color: var(--muted); padding: 3px 0; background: var(--surface); }
 .fileLabels > span:first-child { width: 18px; background: var(--surface); }
 
-.sq         { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: filter .1s; }
+.sq         { width: clamp(44px, 6vw, 70px); height: clamp(44px, 6vw, 70px); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: filter .1s; }
 .sq:hover   { filter: brightness(1.15); }
 .sqLight    { background: var(--sq-light); }
 .sqDark     { background: var(--sq-dark); }
@@ -103,7 +103,7 @@
 /* Hint overlay */
 .hintOverlay { position: absolute; inset: 0 0 21px 18px; pointer-events: none; }
 .hintPulse   {
-  position: absolute; width: 70px; height: 70px;
+  position: absolute; width: clamp(44px, 6vw, 70px); height: clamp(44px, 6vw, 70px);
   background: rgba(0,212,255,.25);
   border: 3px solid var(--cyan);
   animation: hintPulse 1s ease-in-out infinite;
@@ -147,4 +147,15 @@
   .sq { width: 44px; height: 44px; }
   .fileLabel { width: 44px; }
   .piece { font-size: 1.6rem; }
+}
+
+@media(max-width: 600px) {
+  .page { padding: 16px 10px; }
+  .idleTitle { font-size: 2rem; }
+  .statsRow { gap: 10px; }
+  .statBox { padding: 14px 16px; min-width: 80px; }
+  .dailyCard { flex-direction: column; gap: 12px; }
+  .puzzleGrid { grid-template-columns: repeat(2, 1fr); }
+  .leftCol { flex-direction: column; }
+  .resultTitle { font-size: 1.5rem; }
 }

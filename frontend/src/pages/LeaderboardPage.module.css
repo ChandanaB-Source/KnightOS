@@ -57,3 +57,14 @@
   }
   .thWr, .thGames, .thStreak, .thStatus { display: none; }
 }
+
+@media(max-width: 600px) {
+  .tableHead, .row {
+    grid-template-columns: 36px 1fr 70px;
+  }
+  .thRating { display: none; }
+  .thTier, .thWr, .thGames, .thStreak, .thStatus { display: none; }
+  .playerAvatar { width: clamp(24px, 4vw, 28px); height: clamp(24px, 4vw, 28px); font-size: .8rem; }
+  .filters { gap: 6px; }
+  .filterBtn { padding: 5px 10px; font-size: .72rem; }
+}
