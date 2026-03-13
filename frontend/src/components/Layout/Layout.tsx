@@ -32,7 +32,11 @@ export default function Layout() {
         {user && (
           <div className={s.right}>
             <div className={s.chip}>
-              <div className={s.av}>{user.avatar}</div>
+              <div className={s.av}>
+                {user.avatar?.startsWith('http')
+                  ? <img src={user.avatar} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                  : user.avatar}
+              </div>
               <div>
                 <div className={s.un}>{user.username}</div>
                 <div className={s.elo} style={{ color: TC[user.rankTier] || 'var(--gold)' }}>{user.rating} ELO</div>
