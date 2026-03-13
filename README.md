@@ -1,7 +1,34 @@
 # ♟ KnightOS — Competitive Chess SaaS Platform
 
-Full-stack chess platform with ranked Elo play, AI training, real-time multiplayer,
-leaderboards, player profiles, and a premium monetisation tier.
+![KnightOS](https://img.shields.io/badge/KnightOS-Chess%20SaaS-gold?style=for-the-badge&logo=lichess)
+![Node](https://img.shields.io/badge/Node.js-20-green?style=for-the-badge&logo=node.js)
+![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?style=for-the-badge&logo=mongodb)
+
+> A full-stack competitive chess platform with real-time multiplayer, ELO ranking, AI opponent, puzzles, friend system, and Google OAuth.
+
+🌐 **Live App:** https://knight-os-frontend.vercel.app  
+🔧 **Backend API:** https://knightos-backend-production.up.railway.app
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| ♟ **Real-time Multiplayer** | Play against other players with live move sync via Socket.io |
+| 🤖 **AI Opponent** | 8 difficulty levels powered by Stockfish |
+| 🏆 **ELO Ranking System** | Competitive rated games with rank tiers (Bronze → Diamond) |
+| 🧩 **Chess Puzzles** | Solve daily puzzles to improve your game |
+| 👥 **Friend System** | Add friends, send challenges, real-time notifications |
+| 📺 **Spectator Mode** | Watch live games in real time |
+| 🔍 **Post-game Analysis** | Instant game evaluation after each match |
+| 🎵 **Sound Effects** | Move, capture, check sounds |
+| 📖 **Opening Detection** | Identifies chess openings as you play |
+| 🔐 **Google OAuth** | Sign in with Google account |
+| 💎 **Premium Tier** | Monetisation-ready pricing page |
+| 📊 **Leaderboard** | Global rankings with tier filters |
 
 ---
 
@@ -10,207 +37,148 @@ leaderboards, player profiles, and a premium monetisation tier.
 ```
 knightos/
 ├── backend/          Node.js + Express + TypeScript + MongoDB + Socket.io
+│   ├── src/
+│   │   ├── controllers/    Route handlers
+│   │   ├── models/         Mongoose schemas
+│   │   ├── routes/         Express routers
+│   │   ├── services/       Socket.io, DB, Logger
+│   │   ├── middleware/      Auth, Error handling
+│   │   └── index.ts        Entry point
+│   └── Dockerfile
 ├── frontend/         React 18 + TypeScript + Vite + Zustand + Framer Motion
-├── nginx/            Reverse-proxy config (production)
-├── docker-compose.yml
-└── README.md         ← you are here
+│   ├── src/
+│   │   ├── components/     Reusable UI components
+│   │   ├── pages/          Route pages
+│   │   ├── store/          Zustand state management
+│   │   └── services/       API, Socket, Sounds
+│   └── vercel.json
+└── README.md
 ```
 
 ---
 
-## 🛠 Tools You Need to Install
+## 🛠 Tech Stack
 
-| Tool | Version | Download |
-|------|---------|----------|
-| Node.js | 20 LTS | https://nodejs.org |
-| npm | 10+ | (comes with Node) |
-| Git | any | https://git-scm.com |
-| VS Code | any | https://code.visualstudio.com |
-| Docker *(prod only)* | 25+ | https://docker.com |
+### Backend
+- **Node.js 20** + **Express** + **TypeScript**
+- **MongoDB Atlas** + **Mongoose**
+- **Socket.io** — real-time communication
+- **JWT** — authentication
+- **Google Auth Library** — OAuth
+- **Railway** — deployment
 
-**MongoDB Atlas (free cloud DB — no local install needed)**
-1. Go to https://cloud.mongodb.com
-2. Sign up free → Create Organisation → New Project → Create Cluster (M0 Free)
-3. Database Access → Add user (username + password)
-4. Network Access → Add IP → Allow from Anywhere (0.0.0.0/0) for dev
-5. Connect → Drivers → copy the connection string — looks like:
-   `mongodb+srv://youruser:yourpass@cluster0.abc123.mongodb.net/?retryWrites=true&w=majority`
-
----
-
-## ⚡ Quick Start (Development)
-
-### 1 — Clone / extract the project
-```bash
-# If from zip:
-unzip knightos.zip && cd knightos
-```
-
-### 2 — Install all dependencies
-```bash
-npm run install:all
-# This installs root + backend + frontend packages
-```
-
-### 3 — Configure backend environment
-```bash
-cd backend
-cp .env.example .env
-# Open .env and fill in:
-#   MONGODB_URI=  ← paste your Atlas connection string
-#   JWT_SECRET=   ← any 32+ char random string
-#   JWT_REFRESH_SECRET= ← another 32+ char random string
-```
-
-### 4 — Configure frontend environment
-```bash
-cd ../frontend
-cp .env.example .env
-# Default values work for local dev — no changes needed
-```
-
-### 5 — Run both servers
-```bash
-cd ..             # back to project root
-npm run dev       # starts backend :5000 + frontend :5173 simultaneously
-```
-
-Open http://localhost:5173 — you're live! 🎉
-
-> **No MongoDB?** Click "Try Demo Account" on the auth page — fully functional offline demo.
+### Frontend
+- **React 18** + **TypeScript** + **Vite**
+- **Zustand** — state management
+- **Framer Motion** — animations
+- **Chess.js** — game logic
+- **Stockfish** — AI engine
+- **Vercel** — deployment
 
 ---
 
-## 🔑 Environment Variables Reference
+## ⚡ Quick Start (Local Development)
 
-### backend/.env
-```env
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/knightos
-JWT_SECRET=at-least-32-random-characters-here
-JWT_EXPIRES_IN=7d
-JWT_REFRESH_SECRET=another-32-random-characters-here
-JWT_REFRESH_EXPIRES_IN=30d
-FRONTEND_URL=http://localhost:5173
+### 1 — Clone the repo
+```bash
+git clone https://github.com/ChandanaB-Source/KnightOS.git
+cd knightos
 ```
 
-### frontend/.env
+### 2 — Install dependencies
+```bash
+npm install
+```
+
+### 3 — Set up environment variables
+
+Create `frontend/.env`:
 ```env
 VITE_API_URL=http://localhost:5000/api
 VITE_SOCKET_URL=http://localhost:5000
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
----
+Create `backend/.env`:
+```env
+NODE_ENV=development
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=7d
+JWT_REFRESH_SECRET=your_refresh_secret
+JWT_REFRESH_EXPIRES_IN=30d
+FRONTEND_URL=http://localhost:5173
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
 
-## 🚀 Production Deployment
-
-### Option A — Vercel (Frontend) + Railway (Backend)
-
-**Backend → Railway**
+### 4 — Run the app
 ```bash
-# 1. Push to GitHub
-# 2. railway.app → New Project → Deploy from GitHub → select backend/
-# 3. Add env vars in Railway dashboard
-# 4. Railway gives you a URL like: https://knightos-api.up.railway.app
+npm run dev
 ```
 
-**Frontend → Vercel**
-```bash
-cd frontend
-# Set VITE_API_URL=https://knightos-api.up.railway.app/api  in frontend/.env
-# Then:
-npx vercel --prod
-```
-
-### Option B — Docker Compose (Self-hosted VPS)
-```bash
-# Copy project to your VPS, then:
-cp backend/.env.example backend/.env   # fill in vars
-docker-compose up -d --build
-# Nginx listens on port 80/443
-```
+Frontend → http://localhost:5173  
+Backend → http://localhost:5000
 
 ---
 
-## 📡 API Endpoints
+## 🚀 Deployment
 
-```
-POST   /api/auth/register      Register new user → JWT
-POST   /api/auth/login         Login → JWT + refresh token
-POST   /api/auth/refresh       Refresh access token
-GET    /api/auth/me            Get current user (auth required)
-POST   /api/auth/logout        Logout
+### Backend — Railway
+- Connect GitHub repo
+- Set Root Directory: `backend`
+- Set Builder: `Dockerfile`
+- Add all environment variables
 
-GET    /api/games/:gameId      Get game by ID
-GET    /api/games/user/:userId User's game history
-POST   /api/games/ai           Create AI game
-
-GET    /api/users/search       Search users by username
-GET    /api/users/:username    Public profile
-PATCH  /api/users/me           Update profile (auth required)
-
-GET    /api/leaderboard        Ranked leaderboard (cached 60s)
-
-GET    /health                 Health check
-```
-
-## 🔌 Socket.io Events
-
-```
-Client → Server:
-  matchmaking:join    { timeControl: "600+0" }
-  matchmaking:leave
-  game:join           { gameId }
-  game:move           { gameId, from, to, promotion }
-  game:resign         { gameId }
-  game:offer_draw     { gameId }
-  game:accept_draw    { gameId }
-  game:chat           { gameId, message }
-
-Server → Client:
-  matchmaking:searching   { queueSize }
-  matchmaking:found       { gameId, color, opponent, timeControl }
-  game:state              { game }
-  game:move               { from, to, promotion, playerId }
-  game:end                { result, termination }
-  game:offer_draw         { offeredBy, username }
-  game:chat               { userId, username, message, timestamp }
-```
+### Frontend — Vercel
+- Connect GitHub repo
+- Set Root Directory: `frontend`
+- Set Framework: `Vite`
+- Add environment variables:
+  - `VITE_API_URL`
+  - `VITE_SOCKET_URL`
+  - `VITE_GOOGLE_CLIENT_ID`
 
 ---
 
-## 🏆 Rank Tiers
+## 👤 Test Accounts
 
-| Tier     | Rating     | Color   |
-|----------|-----------|---------|
-| Bronze   | < 1000    | #CD7F32 |
-| Silver   | 1000–1400 | #C0C0C0 |
-| Gold     | 1400–1800 | #f5c842 |
-| Platinum | 1800–2200 | #a855f7 |
-| Diamond  | 2200+     | #00d4ff |
+| Username | Email | Password |
+|---|---|---|
+| virat | virat@example.com | Chess1234 |
+| chandu | chandu@example.com | Chess1234 |
+| sunny | sunny@gmail.com | Chess1234 |
 
----
-
-## 💡 Tech Stack
-
-**Backend:** Node.js · Express · TypeScript · MongoDB Atlas (Mongoose) · Socket.io · JWT · bcryptjs · Winston logging
-
-**Frontend:** React 18 · TypeScript · Vite · Zustand · Framer Motion · chess.js · Socket.io-client · React Router v6 · React Hot Toast
-
-**DevOps:** Docker · Docker Compose · Nginx · GitHub Actions CI/CD
+> 20 seeded leaderboard players available. Run `node seed.js` inside `backend/` to seed them.
 
 ---
 
-## 👨‍💻 Author
+## 📁 Key Files
 
-**Chandana B**
-- GitHub: [@ChandanaB-Source](https://github.com/ChandanaB-Source)
+| File | Purpose |
+|---|---|
+| `backend/src/services/socket.ts` | All Socket.io event handlers |
+| `backend/src/controllers/gameController.ts` | ELO calculation, game finalization |
+| `frontend/src/store/gameStore.ts` | Chess game state management |
+| `frontend/src/store/authStore.ts` | Auth state + Google OAuth |
+| `frontend/src/pages/GamePage.tsx` | Main game UI with board |
+| `frontend/src/components/Avatar.tsx` | Reusable avatar component |
+
+---
+
+## 🔐 Google OAuth Setup
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a project → **APIs & Services** → **Credentials**
+3. Create OAuth 2.0 Client (Web application)
+4. Add Authorized JavaScript origins:
+   - `http://localhost:5173`
+   - `https://your-frontend-domain.vercel.app`
+5. Add to `.env` files
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
-
-MIT License — free to use, modify and distribute with attribution.
+MIT © 2026 ChandanaB-Source
