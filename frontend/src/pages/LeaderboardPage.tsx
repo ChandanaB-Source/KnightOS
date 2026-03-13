@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Avatar from '../components/Avatar';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -75,7 +76,7 @@ export default function LeaderboardPage() {
                 : <span className={s.rankNum}>{p.rank}</span>}
             </div>
             <div className={s.thPlayer}>
-              <div className={s.playerAvatar}>{p.avatar}</div>
+              <Avatar avatar={p.avatar} username={p.username} size={36} className={s.playerAvatar} />
               <div>
                 <div className={s.playerName}>{p.username}</div>
                 <div className={s.playerCountry}>{p.country}</div>
